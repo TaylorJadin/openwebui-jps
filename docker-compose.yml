@@ -21,11 +21,45 @@ services:
     depends_on:
       - ollama
     ports:
-      - 8080:8080
+      - 3000:8080
     environment:
       - 'OLLAMA_BASE_URL=http://ollama:11434'
+      - VIRTUAL_HOST=${LETSENCRYPT_DOMAINS}
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=${LETSENCRYPT_DOMAINS}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     extra_hosts:
       - host.docker.internal:host-gateway
+    restart: unless-stopped
+    
+  nginx-proxy:
+    build: 
+      context: .
+      dockerfile: nginx.dockerfile
+    container_name: nginx-proxy 
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certs:/etc/nginx/certs:ro
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: ""
+    restart: unless-stopped
+
+  letsencrypt:
+    image: nginxproxy/acme-companion
+    container_name: letsencrypt 
+# Uncomment the next two lines to use ZeroSSL instead of Let's Encrypt certs
+#    environment:
+#      - ACME_CA_URI=https://acme.zerossl.com/v2/DV90
+    volumes:
+      - certs:/etc/nginx/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    volumes_from:
+      - nginx-proxy
     restart: unless-stopped
 
 volumes:
