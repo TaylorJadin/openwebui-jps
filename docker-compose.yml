@@ -20,12 +20,10 @@ services:
       - ./data:/app/backend/data
     depends_on:
       - ollama
-    ports:
-      - 3000:8080
     environment:
       - 'OLLAMA_BASE_URL=http://ollama:11434'
       - VIRTUAL_HOST=${LETSENCRYPT_DOMAINS}
-      - VIRTUAL_PORT=3000
+      - VIRTUAL_PORT=8080
       - LETSENCRYPT_HOST=${LETSENCRYPT_DOMAINS}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     extra_hosts:
