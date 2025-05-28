@@ -65,7 +65,7 @@ actions:
     - env.file.AddFavorite:
         nodeGroup: cp
         path: ${globals.path}
-        keyword: openwebui
+        keyword: ${globals.shortname}
         isDir: true
 
 addons:
@@ -87,23 +87,9 @@ addons:
         - cmd[cp]: |-
             cd ${globals.path}
             sed -i \
-            -e "s|URL=https://.*|URL=https://${settings.domain}|g" \
             -e "s|LETSENCRYPT_DOMAINS=.*|LETSENCRYPT_DOMAINS=${settings.domain}|g" \
             .env
             docker-compose up -d --force-recreate
-
-  - id: mail-setup
-    name: Mail Setup
-    description: Configure Ghost's mail settings
-    permanent: true
-    buttons:
-      - confirmText: Are you sure you want to proceed?
-        loadingText: Changing Ghost configuration...
-        action: mailConfig
-        caption: Configure
-        successText: Your Ghost environment has been re-configured successfully!
-        settings: mail-settings
-        title: Please enter your mail details
     
   - id: update-openwebui
     name: Update Open WebUI
