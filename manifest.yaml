@@ -114,4 +114,5 @@ success: |
   **Open WebUI**: [https://${env.domain}/](https://${env.domain}/)
   - Make an admistrator account by logging in at [${env.domain}/auth](https://${env.domain}/auth)
   - If you want to change the domain name, point an A record at **${nodes.cp.extIPs}** then use the **Domain Configuration** Add-On to change the domain name and issue a new Let's Encrypt cert
+  - We'd recommend using an OpenAI api key in combination with Open WebUI. Check out their documentation on how to get started here: https://docs.openwebui.com/getting-started/quick-start/starting-with-openai
 
